@@ -32,7 +32,7 @@ Response:
 
 
 ## ReturnLikesForUser
-Response: [ReturnLikesForUser](https://github.com/MSDO-ImageHost/Likes/blob/main/docs/api-spec.md#ReturnLikesForUser) Request: [RequestLikesForPost](https://github.com/MSDO-ImageHost/Accounts/blob/main/docs/api-spec.md#RequestLikesForPost)
+Response: [ReturnLikesForUser](https://github.com/MSDO-ImageHost/Likes/blob/main/docs/api-spec.md#ReturnLikesForUser) Request: [ReturnLikesForUser](https://github.com/MSDO-ImageHost/Accounts/blob/main/docs/api-spec.md#ReturnLikesForUser)
 Request: 
 ```json
 {
