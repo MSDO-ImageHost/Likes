@@ -1,6 +1,6 @@
 # Likes
 ## ConfirmLikeUpdate
-Response: [ConfirmLikeUpdate](https://github.com/MSDO-ImageHost/Likes/blob/main/docs/api-spec.md#ConfirmLikeUpdate) Request: [UpdateLike](https://github.com/MSDO-ImageHost/Gateway/blob/main/docs/api-spec.md#ConfirmLikeUpdate)
+Request: [UpdateLike](GatewayLink#ConfirmLikeUpdate)  
 Request: 
 ```json
 {
@@ -8,7 +8,7 @@ Request:
     "Post_ID": "<postid>"
 }
 ```
-Response:
+Response: [ConfirmLikeUpdate](LikesLink#ConfirmLikeUpdate)
 ```json
 {
     "Like status": "True/False"
@@ -16,14 +16,14 @@ Response:
 ```
 
 ## ReturnLikesForPost
-Response: [ReturnLikesForPost](https://github.com/MSDO-ImageHost/Likes/blob/main/docs/api-spec.md#ReturnLikesForPost) Request: [RequestLikesForPost](https://github.com/MSDO-ImageHost/Posts/blob/main/docs/api-spec.md#RequestLikesForPost)
+Request: [RequestLikesForPost](PostsLink#RequestLikesForPost)  
 Request: 
 ```json
 {
     "Post_ID": "<postid>"
 }
 ```
-Response:
+Response: [ReturnLikesForPost](LikesLink#ReturnLikesForPost)
 ```json
 {
     "Like amount": "<Positive int>"
@@ -32,14 +32,13 @@ Response:
 
 
 ## ReturnLikesForUser
-Response: [ReturnLikesForUser](https://github.com/MSDO-ImageHost/Likes/blob/main/docs/api-spec.md#ReturnLikesForUser) Request: [ReturnLikesForUser](https://github.com/MSDO-ImageHost/Accounts/blob/main/docs/api-spec.md#ReturnLikesForUser)
-Request: 
+Request: [ReturnLikesForUser](AccountsLink#ReturnLikesForUser)  
 ```json
 {
     "User": "<User_ID>"
 }
 ```
-Response:
+Response: [ReturnLikesForUser](LikesLink#ReturnLikesForUser)
 ```json
 {
     "Like amount": "<Positive int>"
