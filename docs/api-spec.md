@@ -1,7 +1,6 @@
-# Likes
+# API Reference
 ## ConfirmLikeUpdate
 Request: [UpdateLike](GatewayLink#ConfirmLikeUpdate)  
-Request: 
 ```json
 {
     "User": "<user-id>",
@@ -17,7 +16,6 @@ Response: [ConfirmLikeUpdate](LikesLink#ConfirmLikeUpdate)
 
 ## ReturnLikesForPost
 Request: [RequestLikesForPost](PostsLink#RequestLikesForPost)  
-Request: 
 ```json
 {
     "Post_ID": "<postid>"
