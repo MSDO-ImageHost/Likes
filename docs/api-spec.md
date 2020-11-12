@@ -27,18 +27,3 @@ Response: [ReturnLikesForPost](LikesLink#ReturnLikesForPost)
     "Like amount": "<Positive int>"
 }
 ```
-
-
-## ReturnLikesForUser
-Request: [ReturnLikesForUser](AccountsLink#ReturnLikesForUser)  
-```json
-{
-    "User": "<User_ID>"
-}
-```
-Response: [ReturnLikesForUser](LikesLink#ReturnLikesForUser)
-```json
-{
-    "Like amount": "<Positive int>"
-}
-```
