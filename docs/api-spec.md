@@ -1,13 +1,13 @@
 # API Reference
 ## ConfirmLikeUpdate
-Request: [UpdateLike](GatewayLink#ConfirmLikeUpdate)  
+Request UpdateLike; Sent by [Gateway](../../../../Gateway):
 ```json
 {
     "User": "<user-id>",
     "Post_ID": "<postid>"
 }
 ```
-Response: [ConfirmLikeUpdate](LikesLink#ConfirmLikeUpdate)
+Response ConfirmLikeUpdate; Received by [Gateway](../../../../Gateway):
 ```json
 {
     "Like status": "True/False"
@@ -15,13 +15,13 @@ Response: [ConfirmLikeUpdate](LikesLink#ConfirmLikeUpdate)
 ```
 
 ## ReturnLikesForPost
-Request: [RequestLikesForPost](PostsLink#RequestLikesForPost)  
+Request RequestLikesForPost; Sent by [Gateway](../../../../Gateway):
 ```json
 {
     "Post_ID": "<postid>"
 }
 ```
-Response: [ReturnLikesForPost](LikesLink#ReturnLikesForPost)
+Response ReturnLikesForPost; Received by [Gateway](../../../../Gateway):
 ```json
 {
     "Like amount": "<Positive int>"
