@@ -15,13 +15,13 @@ Response ConfirmLikeUpdate; Received by [Gateway](../../../../Gateway):
 ```
 
 ## ReturnLikesForPost
-Request RequestLikesForPost; Sent by [Gateway](../../../../Gateway):
+Request RequestLikesForPost; Sent by [Posts](../../../../Posts):
 ```json
 {
     "Post_ID": "<postid>"
 }
 ```
-Response ReturnLikesForPost; Received by [Gateway](../../../../Gateway):
+Response ReturnLikesForPost; Received by [Posts](../../../../Posts):
 ```json
 {
     "Like amount": "<Positive int>"
