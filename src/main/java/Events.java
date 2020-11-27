@@ -1,6 +1,9 @@
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.concurrent.TimeoutException;
 
@@ -15,7 +18,7 @@ public class Events {
         } catch (SQLException e) {
             System.out.println("An error occured in the SQL connection");
             System.out.println(e.getMessage()); //Perhaps log this error somewhere?
-        } catch (TimeoutException | IOException e) {
+        } catch (TimeoutException | IOException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
             System.out.println("An error occured in the RabbitMQ connection");
             System.out.println(e.getMessage()); //Perhaps log this error somewhere?
         }
@@ -32,7 +35,7 @@ public class Events {
         } catch (SQLException e) {
             System.out.println("An error occured in the SQL connection");
             System.out.println(e.getMessage()); //Perhaps log this error somewhere?
-        } catch (TimeoutException | IOException e) {
+        } catch (TimeoutException | IOException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
             System.out.println("An error occured in the RabbitMQ connection");
             System.out.println(e.getMessage()); //Perhaps log this error somewhere?
         }
@@ -48,7 +51,7 @@ public class Events {
         } catch (SQLException e) {
             System.out.println("An error occured in the SQL connection");
             System.out.println(e.getMessage()); //Perhaps log this error somewhere?
-        } catch (TimeoutException | IOException e) {
+        } catch (TimeoutException | IOException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
             System.out.println("An error occured in the RabbitMQ connection");
             System.out.println(e.getMessage()); //Perhaps log this error somewhere?
         }

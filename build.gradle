@@ -1,12 +1,12 @@
+import org.gradle.jvm.tasks.Jar
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
-group 'org.example'
-version '1.0'
-
+group = 'dk.sdu.imagehost'
+version = "1.0"
 sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
@@ -17,4 +17,13 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.29'
     compile 'com.rabbitmq:amqp-client:5.10.0'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'receiver'
+        )
+    }
 }

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: json-simple-1.1.1.jar mysql-connector-java-8.0.22.jar slf4j-
+ log4j12-1.7.29.jar amqp-client-5.10.0.jar junit-4.10.jar protobuf-java-
+ 3.11.4.jar slf4j-api-1.7.30.jar log4j-1.2.17.jar hamcrest-core-1.1.jar
+Main-Class: receiver
+

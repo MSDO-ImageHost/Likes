@@ -1,0 +1,10 @@
+-classpath 'C:\\Users\\lass7\\Documents\\GitHub\\Likes\\build\\classes\\java\\main;C:\\Users\\lass7\\Documents\\GitHub\\Likes\\build\\resources\\main;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\com.googlecode.json-simple\\json-simple\\1.1.1\\c9ad4a0850ab676c5c64461a05ca524cdfff59f1\\json-simple-1.1.1.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\mysql\\mysql-connector-java\\8.0.22\\ec8bfce16c8bd18d6cb598b1147aa145be1408f\\mysql-connector-java-8.0.22.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-log4j12\\1.7.29\\92df0e670a2373f4f90d3dab158a5219c68ed4eb\\slf4j-log4j12-1.7.29.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\com.rabbitmq\\amqp-client\\5.10.0\\4de351467a13b8ca4eb7e8023032f9f964a21796\\amqp-client-5.10.0.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\junit\\junit\\4.10\\e4f1766ce7404a08f45d859fb9c226fc9e41a861\\junit-4.10.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\com.google.protobuf\\protobuf-java\\3.11.4\\7ec0925cc3aef0335bbc7d57edfd42b0f86f8267\\protobuf-java-3.11.4.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\1.7.30\\b5a4b6d16ab13e34a88fae84c35cd5d68cac922c\\slf4j-api-1.7.30.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\log4j\\log4j\\1.2.17\\5af35056b4d257e4b64b9e8069c0746e8b08629f\\log4j-1.2.17.jar;C:\\Users\\lass7\\.gradle\\caches\\modules-2\\files-2.1\\org.hamcrest\\hamcrest-core\\1.1\\860340562250678d1a344907ac75754e259cdb14\\hamcrest-core-1.1.jar'
+-d 'C:\\Users\\lass7\\Documents\\GitHub\\Likes\\build\\docs\\javadoc'
+-doctitle 'Likes 1.0 API'
+-quiet 
+-windowtitle 'Likes 1.0 API'
+'C:\\Users\\lass7\\Documents\\GitHub\\Likes\\src\\main\\java\\Events.java'
+'C:\\Users\\lass7\\Documents\\GitHub\\Likes\\src\\main\\java\\mySQL.java'
+'C:\\Users\\lass7\\Documents\\GitHub\\Likes\\src\\main\\java\\rabbitMQ.java'
+'C:\\Users\\lass7\\Documents\\GitHub\\Likes\\src\\main\\java\\receiver.java'
+'C:\\Users\\lass7\\Documents\\GitHub\\Likes\\src\\main\\java\\sender.java'
