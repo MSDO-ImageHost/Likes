@@ -13,8 +13,9 @@ public class mySQL {
         try {
             System.out.println("mySQL connection shutting down");
             con.close();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("An error occured while stopping the mySQL connection. Cause: " + e.getCause().getMessage());
+            e.printStackTrace(System.err);
         }
     }
 
@@ -23,13 +24,13 @@ public class mySQL {
         int affected;
         Boolean bool = checkLike(UserID,PostID);
         if(bool) {
-            System.out.println("Exists!");
+            System.out.println("Setting like status to false!");
             sql = String.format("DELETE FROM Likes WHERE postID='%s' AND userID='%s'", PostID, UserID);
             affected = stmt.executeUpdate(sql);
             if(affected == 1)
                 return false;
         } else {
-            System.out.println("Does not!");
+            System.out.println("Setting like status to true");
             sql = String.format("INSERT INTO Likes (postID, userID) VALUES ('%s','%s');",PostID,UserID);
             affected = stmt.executeUpdate(sql);
             if(affected == 1)

@@ -1,3 +1,5 @@
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.rabbitmq.client.AMQP.BasicProperties;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -10,60 +12,109 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.SQLOutput;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class receiver {
     public static void main(String[] args) {
-        ping("mySQL");
-        ping("rabbitMQ");
+        JSONParser parser = new JSONParser();
         try {
-            mySQL.start("jdbc:mysql://mySQL:3306/","root","1234");
-        } catch (SQLException throwables) {
-            System.out.println("mySQL connection failed! Cause: " + throwables.getCause().getMessage() + "\nHas it finished starting?");
-            throwables.printStackTrace(System.err);
+            mySQL.start(System.getenv("MYSQL_URI"),"root",System.getenv("MYSQL_ROOT_PASSWORD"));
+        } catch (SQLException e) {
+            System.out.println("mySQL connection failed! Cause: " + e.getMessage() + "\nHas it finished starting?");
+            e.printStackTrace(System.err);
         }
         try {
+            /* Event: UpdateLike Response: ConfirmLikeUpdate
+            *
+            * */
             rabbitMQ.addSubscription("UpdateLike","Likes",(consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(),"UTF-8");
+                String correlationID = delivery.getProperties().getCorrelationId();
+                String contentType = delivery.getProperties().getContentType();
+                JSONObject json;
                 try {
-                    JSONParser parser = new JSONParser();
-                    JSONObject json = (JSONObject) parser.parse(message);
-                    Events.UpdateLike(json.get("User").toString(),json.get("Post_ID").toString());
+                    json = (JSONObject) parser.parse(message);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    rabbitMQ.send("ConfirmLikeUpdate","",rabbitMQ.setupProperties(correlationID,contentType,400,"Malformed request syntax"));
+                    return;
+                }
+                String token = String.valueOf(delivery.getProperties().getHeaders().get("jwt"));
+                DecodedJWT jwt = Security.decodeJWT(token);
+                if(jwt == null){
+                    rabbitMQ.send("ConfirmLikeUpdate","",rabbitMQ.setupProperties(correlationID,contentType,403,"Invalid Authentication token"));
+                    return;
+                }
+                JSONObject response = Events.UpdateLike(jwt.getSubject(), json.get("post_id"));
+                Object like_status = response.get("Like status");
+                if(like_status != null) {
+                    rabbitMQ.send("ConfirmLikeUpdate",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
+                } else {
+                    rabbitMQ.send("ConfirmLikeUpdate","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
                 }
             });
+            /* Event: RequestLikesForPost Response: ReturnLikesForPost
+             *
+             * */
             rabbitMQ.addSubscription("RequestLikesForPost","Likes",(consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(),"UTF-8");
+                String correlationID = delivery.getProperties().getCorrelationId();
+                String contentType = delivery.getProperties().getContentType();
+                JSONObject json;
                 try {
-                    JSONParser parser = new JSONParser();
-                    JSONObject json = (JSONObject) parser.parse(message);
-                    Events.RequestLikesForPost(json.get("Post_ID").toString());
+                    json = (JSONObject) parser.parse(message);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    rabbitMQ.send("ReturnLikesForPost","",rabbitMQ.setupProperties(correlationID,contentType,400,"Malformed request syntax"));
+                    return;
+                }
+                String token = String.valueOf(delivery.getProperties().getHeaders().get("jwt"));
+                DecodedJWT jwt = Security.decodeJWT(token);
+                if(jwt == null){
+                    rabbitMQ.send("ReturnLikesForPost","",rabbitMQ.setupProperties(correlationID,contentType,403,"Invalid Authentication token"));
+                    return;
+                }
+                JSONObject response = Events.RequestLikesForPost(json.get("post_id"));
+                Object Like_amount = response.get("Like amount");
+                if(Like_amount != null) {
+                    rabbitMQ.send("ReturnLikesForPost",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
+                } else {
+                    rabbitMQ.send("ReturnLikesForPost","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
                 }
             });
+            /* Event: RequestLikeStatus Response: ReturnLikeStatus
+            *
+            * */
             rabbitMQ.addSubscription("RequestLikeStatus","Likes",(consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(),"UTF-8");
+                String correlationID = delivery.getProperties().getCorrelationId();
+                String contentType = delivery.getProperties().getContentType();
+                JSONObject json;
                 try {
-                    JSONParser parser = new JSONParser();
-                    JSONObject json = (JSONObject) parser.parse(message);
-                    Events.RequestLikeStatus(json.get("User").toString(),json.get("Post_ID").toString());
+                    json = (JSONObject) parser.parse(message);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    System.out.println("The JSON object failed to be parsed! \n"+ message);
+                    rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,400,"Malformed request syntax"));
+                    return;
+                }
+                String token = String.valueOf(delivery.getProperties().getHeaders().get("jwt"));
+                DecodedJWT jwt = Security.decodeJWT(token);
+                if(jwt == null){
+                    rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,403,"Invalid Authentication token"));
+                    return;
+                }
+                JSONObject response = Events.RequestLikeStatus(jwt.getSubject(),json.get("post_id"), consumerTag, delivery.getProperties().getCorrelationId());
+                Object Like_status = response.get("Like status");
+                if(Like_status != null) {
+                    rabbitMQ.send("ReturnLikeStatus",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
+                } else {
+                    rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
                 }
             });
             rabbitMQ.setupReceiver("Likes");
-        } catch (IOException | TimeoutException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void ping(String url){
-        try {
-            InetAddress geek = InetAddress.getByName(url);
-            if(geek.isReachable(5000)) System.out.println("Host reached!");
-        } catch (IOException e) {
-            System.out.println("Sorry ! We can't reach to this host");
+            System.out.println("The Likes service is now fully up and running!");
+        } catch (IOException | TimeoutException e) {
+            System.out.println("Failed to add subscription! Cause: \n" + e.getMessage());
         }
     }
 }

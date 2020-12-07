@@ -3,6 +3,7 @@ version: '3'
 networks:
   public:
     driver: bridge
+    name: ImageHost
 
 volumes:
   rabbitmq_data:
@@ -26,11 +27,10 @@ services:
     restart: unless-stopped
     networks:
       - public
-
   mySQL:
     image: mysql:8
     command: --init-file /data/application/init.sql
-    container_name: mySQL
+    container_name: likes_db
     networks:
       - public
     volumes:
@@ -38,15 +38,10 @@ services:
       - ./init.sql:/data/application/init.sql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: Likes
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     ports:
       - 3306:3306
-
-  BusyBox:
-    image: busybox
-    networks:
-      - public
 
   likes:
     build: .
@@ -54,14 +49,13 @@ services:
     networks:
       - public
     depends_on:
-      - rabbitMQ
       - mySQL
     ports:
       - 8080:80
       - 3000:3000
     env_file: .env
     environment:
-      - AMQP_USER=${RABBITMQ_USERNAME}
-      - AMQP_PASS=${RABBITMQ_PASSWORD}
       - AMQP_URI=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:5672
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT}
+      - MYSQL_URI=jdbc:mysql://likes_db:3306/${MYSQL_DATABASE}
     restart: unless-stopped

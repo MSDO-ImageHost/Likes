@@ -1,59 +1,60 @@
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.concurrent.TimeoutException;
 
 public class Events {
-    public static void UpdateLike(String User_ID, String Post_ID){
+    public static JSONObject UpdateLike(String User_ID, Object Post_ID){
+        JSONObject json = new JSONObject();
+        if(User_ID == null || Post_ID == null) {
+            json.put("Status", 400);
+            json.put("Message","Malformed request syntax; User_ID or Post_ID not defined!");
+            return json;
+        }
         try {
-            System.out.println("User_ID: " + User_ID + " Post_ID: " + Post_ID);
-            Boolean bool = mySQL.changeLike(User_ID,Post_ID);
-            JSONObject json = new JSONObject();
+            Boolean bool = mySQL.changeLike(User_ID,Post_ID.toString());
             json.put("Like status", bool);
-            rabbitMQ.send("ConfirmLikeUpdate",json.toString());
+            return json;
         } catch (SQLException e) {
-            System.out.println("An error occured in the SQL connection");
-            System.out.println(e.getMessage()); //Perhaps log this error somewhere?
-        } catch (TimeoutException | IOException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
-            System.out.println("An error occured in the RabbitMQ connection");
-            System.out.println(e.getMessage()); //Perhaps log this error somewhere?
+            System.out.println("An error occured in the SQL connection. Cause: \n" + e.getMessage());
+            e.printStackTrace(System.err);
+            json.put("Status", 503);
+            json.put("Message","Failed to connect to database");
+            return json;
         }
     }
 
-    public static void RequestLikesForPost(String Post_ID){
+    public static JSONObject RequestLikesForPost(Object Post_ID) {
+        JSONObject json = new JSONObject();
+        if(Post_ID == null) {
+            json.put("Status", 400);
+            json.put("Message","Malformed request syntax; Post_ID not defined!");
+            return json;
+        }
         try {
-            System.out.println("Post_ID: " + Post_ID);
-            int count = mySQL.LikesForPost(Post_ID);
-            JSONObject json = new JSONObject();
+            int count = mySQL.LikesForPost((String) Post_ID);
             json.put("Like amount", count);
-            System.out.println(count);
-            rabbitMQ.send("ReturnLikesForPost",json.toString());
+            return json;
         } catch (SQLException e) {
-            System.out.println("An error occured in the SQL connection");
-            System.out.println(e.getMessage()); //Perhaps log this error somewhere?
-        } catch (TimeoutException | IOException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
-            System.out.println("An error occured in the RabbitMQ connection");
-            System.out.println(e.getMessage()); //Perhaps log this error somewhere?
+            json.put("Status", 503);
+            json.put("Message","Failed to connect to database");
+            return json;
         }
     }
-    public static void RequestLikeStatus(String User_ID, String Post_ID){
+    public static JSONObject RequestLikeStatus(String User_ID, Object Post_ID, String consumerTag, String correlationID) {
+        JSONObject json = new JSONObject();
+        if(User_ID == null || Post_ID == null) {
+            json.put("Status", 400);
+            json.put("Message","Malformed request syntax; User_ID or Post_ID not defined!");
+            return json;
+        }
         try {
-            System.out.println("User_ID: " + User_ID + " Post_ID: " + Post_ID);
-            Boolean bool = mySQL.checkLike(User_ID,Post_ID);
-            JSONObject json = new JSONObject();
+            Boolean bool = mySQL.checkLike(User_ID, (String) Post_ID);
             json.put("Like status", bool);
-            System.out.println(bool);
-            rabbitMQ.send("ReturnLikeStatus",json.toString());
+            return json;
         } catch (SQLException e) {
-            System.out.println("An error occured in the SQL connection");
-            System.out.println(e.getMessage()); //Perhaps log this error somewhere?
-        } catch (TimeoutException | IOException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
-            System.out.println("An error occured in the RabbitMQ connection");
-            System.out.println(e.getMessage()); //Perhaps log this error somewhere?
+            json.put("Status", 503);
+            json.put("Message","Failed to connect to database");
+            return json;
         }
     }
 }
