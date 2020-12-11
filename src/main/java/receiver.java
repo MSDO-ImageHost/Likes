@@ -1,24 +1,20 @@
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.rabbitmq.client.AMQP.BasicProperties;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class receiver {
     public static void main(String[] args) {
         String mySQLURI = System.getenv("MYSQL_URI");
+        ping("mysql");
+        ping(mySQLURI);
+        ping("rabbitmq");
+        ping(System.getenv("AMQP_URI"));
         System.out.println("mySQL link URL: "+ mySQLURI + " with " + System.getenv("MYSQL_ROOT_PASSWORD"));
         JSONParser parser = new JSONParser();
         try {
@@ -117,6 +113,15 @@ public class receiver {
             System.out.println("The Likes service is now fully up and running!");
         } catch (IOException | TimeoutException e) {
             System.out.println("Failed to add subscription! Cause: \n" + e.getMessage());
+        }
+    }
+
+    public static void ping(String url){
+        try {
+            InetAddress geek = InetAddress.getByName(url);
+            if(geek.isReachable(5000)) System.out.println("Host reached!");
+        } catch (IOException e) {
+            System.out.println("Sorry ! We can't reach to this host");
         }
     }
 }
