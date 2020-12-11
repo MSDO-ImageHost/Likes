@@ -18,9 +18,11 @@ import java.util.concurrent.TimeoutException;
 
 public class receiver {
     public static void main(String[] args) {
+        String mySQLURI = System.getenv("MYSQL_URI");
+        System.out.println("mySQL link URL: "+ mySQLURI + " with " + System.getenv("MYSQL_ROOT_PASSWORD"));
         JSONParser parser = new JSONParser();
         try {
-            mySQL.start(System.getenv("MYSQL_URI"),"root",System.getenv("MYSQL_ROOT_PASSWORD"));
+            mySQL.start(mySQLURI,"root",System.getenv("MYSQL_ROOT_PASSWORD"));
         } catch (SQLException e) {
             System.out.println("mySQL connection failed! Cause: " + e.getMessage() + "\nHas it finished starting?");
             e.printStackTrace(System.err);

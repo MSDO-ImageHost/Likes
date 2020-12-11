@@ -22,4 +22,7 @@ public class Security {
         }
     }
 
+    public static void main(String[] args) {
+        System.out.println(decodeJWT("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDEwIiwicm9sZSI6InVzZXIiLCJpc3MiOiJJbWFnZUhvc3Quc2R1LmRrIiwiZXhwIjoxNjM4NTYwNzEzLCJpYXQiOjE2MDcwMjQ3MTN9.c07KbCMxUB2qcE-fUbcIi-d0338RU6C7-1gTi1VAkig").getSubject());
+    }
 }

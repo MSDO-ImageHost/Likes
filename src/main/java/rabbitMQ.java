@@ -15,11 +15,11 @@ public class rabbitMQ {
     private static Map<String, DeliverCallback> events = new HashMap<>();
 
     private static Channel setupChannel() throws IOException, TimeoutException {
-        // TODO: Figure out how AMQP link is given securely
         String uri = System.getenv("AMQP_URI");
         ConnectionFactory factory = new ConnectionFactory();
+        System.out.println("rabbitmq URL: "+ uri);
         try {
-            factory.setUri("amqp://guest:guest@rabbitmq:5672");
+            factory.setUri(uri);
         } catch (URISyntaxException | NoSuchAlgorithmException | KeyManagementException e) {
             System.out.println("rabbitMQ connection failed! Cause: " + e.getCause().getMessage() + "\nHas it finished starting?");
             e.printStackTrace(System.err);
