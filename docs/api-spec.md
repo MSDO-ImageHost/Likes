@@ -3,14 +3,14 @@
 Request UpdateLike; Sent by [Gateway](../../../../Gateway):
 ```json
 {
-    "User": "<user-id>",
-    "Post_ID": "<postid>"
+    "user": "<user-id>",
+    "post_ID": "<postid>"
 }
 ```
 Response ConfirmLikeUpdate; Received by [Gateway](../../../../Gateway):
 ```json
 {
-    "Like status": "True/False"
+    "like status": "True/False"
 }
 ```
 
@@ -18,12 +18,25 @@ Response ConfirmLikeUpdate; Received by [Gateway](../../../../Gateway):
 Request RequestLikesForPost; Sent by [Posts](../../../../Posts):
 ```json
 {
-    "Post_ID": "<postid>"
+    "post_id": "<postid>"
 }
 ```
 Response ReturnLikesForPost; Received by [Posts](../../../../Posts):
 ```json
 {
-    "Like amount": "<Positive int>"
+    "post_id": "<postid>"
+}
+```
+## ReturnLikeStatus
+Request RequestLikeStatus; Sent by [Posts](../../../../Posts):
+```json
+{
+    "post_id": "<postid>"
+}
+```
+Response ReturnLikesForPost; Received by [Posts](../../../../Posts):
+```json
+{
+    "like_amount": "<Positive int>"
 }
 ```
