@@ -10,7 +10,7 @@ Request UpdateLike; Sent by [Gateway](../../../../Gateway):
 Response ConfirmLikeUpdate; Received by [Gateway](../../../../Gateway):
 ```json
 {
-    "like status": "True/False"
+    "like_status": "True/False"
 }
 ```
 
@@ -24,7 +24,7 @@ Request RequestLikesForPost; Sent by [Posts](../../../../Posts):
 Response ReturnLikesForPost; Received by [Posts](../../../../Posts):
 ```json
 {
-    "post_id": "<postid>"
+    "like_amount": "<Positive int>"
 }
 ```
 ## ReturnLikeStatus
@@ -34,9 +34,9 @@ Request RequestLikeStatus; Sent by [Posts](../../../../Posts):
     "post_id": "<postid>"
 }
 ```
-Response ReturnLikesForPost; Received by [Posts](../../../../Posts):
+Response ReturnLikeStatus; Received by [Posts](../../../../Posts):
 ```json
 {
-    "like_amount": "<Positive int>"
+    "like_status": "True/False"
 }
 ```
