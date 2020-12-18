@@ -1,0 +1,19 @@
+apiVersion: mysql.presslabs.org/v1alpha1
+kind: MysqlCluster
+metadata:
+  name: my-cluster
+spec:
+  replicas: 2
+  secretName: my-cluster-secret
+  initFileExtraSQL:
+    - "CREATE DATABASE IF NOT EXISTS Likes"
+    - "USE Likes"
+    - "CREATE TABLE IF NOT EXISTS Likes (postID varchar(255) NOT NULL,userID varchar(255) NOT NULL,Liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-cluster-secret
+type: Opaque
+data:
+  ROOT_PASSWORD: aGVq

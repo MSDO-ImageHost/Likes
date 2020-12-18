@@ -10,11 +10,7 @@ import java.util.concurrent.TimeoutException;
 
 public class receiver {
     public static void main(String[] args) {
-        String mySQLURI = System.getenv("MYSQL_URI");
-        ping("mysql");
-        ping(mySQLURI);
-        ping("rabbitmq");
-        ping(System.getenv("AMQP_URI"));
+        String mySQLURI = "jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":" + System.getenv("MYSQL_PORT") + "/" + System.getenv("MYSQL_DB");
         System.out.println("mySQL link URL: "+ mySQLURI + " with " + System.getenv("MYSQL_ROOT_PASSWORD"));
         JSONParser parser = new JSONParser();
         try {
@@ -119,9 +115,9 @@ public class receiver {
     public static void ping(String url){
         try {
             InetAddress geek = InetAddress.getByName(url);
-            if(geek.isReachable(5000)) System.out.println("Host reached!");
+            if(geek.isReachable(5000)) System.out.println(url + " host reached!");
         } catch (IOException e) {
-            System.out.println("Sorry ! We can't reach to this host");
+            System.out.println("Sorry ! We can't reach to this host: " + url);
         }
     }
 }
