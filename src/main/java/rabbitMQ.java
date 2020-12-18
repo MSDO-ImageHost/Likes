@@ -13,18 +13,21 @@ import java.util.concurrent.TimeoutException;
 public class rabbitMQ {
     private static final String rapid = "rapid";
     private static Map<String, DeliverCallback> events = new HashMap<>();
+    private static Connection connection;
 
-    private static Channel setupChannel() throws IOException, TimeoutException {
+    public static void setupRabbit() throws IOException, TimeoutException {
         String uri = System.getenv("AMQP_URI");
         ConnectionFactory factory = new ConnectionFactory();
-        System.out.println("rabbitmq URL: "+ uri);
         try {
             factory.setUri(uri);
         } catch (URISyntaxException | NoSuchAlgorithmException | KeyManagementException e) {
             System.out.println("rabbitMQ connection failed! Cause: " + e.getCause().getMessage() + "\nHas it finished starting?");
             e.printStackTrace(System.err);
         }
-        Connection connection = factory.newConnection();
+        connection = factory.newConnection();
+    }
+
+    private static Channel setupChannel() throws IOException {
         Channel channel = connection.createChannel();
         channel.exchangeDeclare(rabbitMQ.rapid,"direct");
         return channel;

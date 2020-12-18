@@ -11,14 +11,18 @@ import java.util.concurrent.TimeoutException;
 public class receiver {
     public static void main(String[] args) {
         String mySQLURI = "jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":" + System.getenv("MYSQL_PORT") + "/" + System.getenv("MYSQL_DB");
-        System.out.println("mySQL link URL: "+ mySQLURI + " with " + System.getenv("MYSQL_ROOT_PASSWORD"));
-        JSONParser parser = new JSONParser();
         try {
             mySQL.start(mySQLURI,"root",System.getenv("MYSQL_ROOT_PASSWORD"));
+            rabbitMQ.setupRabbit();
         } catch (SQLException e) {
             System.out.println("mySQL connection failed! Cause: " + e.getMessage() + "\nHas it finished starting?");
             e.printStackTrace(System.err);
+        } catch (TimeoutException | IOException e) {
+            System.out.println("rabbitmq connection failed! Cause: " + e.getMessage() + "\nHas it finished starting?");
+            e.printStackTrace(System.err);
         }
+
+        JSONParser parser = new JSONParser();
         try {
             /* Event: UpdateLike Response: ConfirmLikeUpdate
             *
