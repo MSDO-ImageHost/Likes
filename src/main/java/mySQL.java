@@ -5,9 +5,9 @@ public class mySQL {
     private static Statement stmt;
 
     public static void start(String URL, String User, String psw) throws SQLException {
-        System.out.println(psw);
         con = DriverManager.getConnection(URL, User, psw);
         stmt = con.createStatement();
+        System.out.println("MySQL connection is now ready!");
     }
 
     public static void stop() {

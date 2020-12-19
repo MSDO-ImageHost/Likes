@@ -1,6 +1,8 @@
-import com.rabbitmq.client.*;
 import com.rabbitmq.client.AMQP.BasicProperties;
-import org.json.simple.JSONObject;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,7 +18,7 @@ public class rabbitMQ {
     private static Connection connection;
 
     public static void setupRabbit() throws IOException, TimeoutException {
-        String uri = System.getenv("AMQP_URI");
+        String uri = System.getenv("RABBITMQ_USER") + ":"  + System.getenv("RABBITMQ_PASS") + "@" + System.getenv("RABBITMQ_HOST");
         ConnectionFactory factory = new ConnectionFactory();
         try {
             factory.setUri(uri);
@@ -25,23 +27,13 @@ public class rabbitMQ {
             e.printStackTrace(System.err);
         }
         connection = factory.newConnection();
+        System.out.println("RabbitMQ connection is now ready!");
     }
 
     private static Channel setupChannel() throws IOException {
         Channel channel = connection.createChannel();
         channel.exchangeDeclare(rabbitMQ.rapid,"direct");
         return channel;
-    }
-
-    public static void send(String event, String body, String correlationId) {
-        try {
-            Channel channel = setupChannel();
-            BasicProperties props = new BasicProperties().builder().correlationId(correlationId).build();
-            channel.basicPublish(rabbitMQ.rapid, event,props, body.getBytes("UTF-8"));
-            channel.close();
-        } catch (IOException | TimeoutException e) {
-            System.out.println("An error occured while trying to send the event " + event + " on the " + rabbitMQ.rapid + " exchange.");
-        }
     }
 
     public static void send(String event, String body, BasicProperties props) {
@@ -56,13 +48,13 @@ public class rabbitMQ {
     }
 
     //Bind a single event to one queue
-    private static void bindQueue(String event, String queue) throws IOException, TimeoutException {
+    private static void bindQueue(String event, String queue) throws IOException {
         Channel channel = setupChannel();
         channel.queueDeclare(queue,false,false,false,null);
         channel.queueBind(queue,rabbitMQ.rapid,event);
     }
 
-    public static void setupReceiver(String queueName) throws TimeoutException, IOException {
+    public static void setupReceiver(String queueName) throws IOException {
         Channel channel = setupChannel();
         DeliverCallback callback = ((consumerTag, delivery) -> {
             DeliverCallback func = events.get(delivery.getEnvelope().getRoutingKey());
