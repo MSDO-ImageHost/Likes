@@ -12,7 +12,7 @@ public class Events {
         }
         try {
             Boolean bool = mySQL.changeLike(User_ID,Post_ID.toString());
-            json.put("Like status", bool);
+            json.put("like_status", bool);
             return json;
         } catch (SQLException e) {
             System.out.println("An error occured in the SQL connection. Cause: \n" + e.getMessage());
@@ -32,7 +32,7 @@ public class Events {
         }
         try {
             int count = mySQL.LikesForPost((String) Post_ID);
-            json.put("Like amount", count);
+            json.put("like_amount", count);
             return json;
         } catch (SQLException e) {
             json.put("Status", 503);
@@ -49,7 +49,7 @@ public class Events {
         }
         try {
             Boolean bool = mySQL.checkLike(User_ID, (String) Post_ID);
-            json.put("Like status", bool);
+            json.put("like_status", bool);
             return json;
         } catch (SQLException e) {
             System.out.println(e.getErrorCode());
