@@ -13,7 +13,7 @@ public class receiver {
         ping("rabbitmq:5672");
         String mySQLURI = "jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":" + System.getenv("MYSQL_PORT") + "/" + System.getenv("MYSQL_DB");
         try {
-            mySQL.start(mySQLURI,"root",System.getenv("MYSQL_ROOT_PASSWORD"));
+            mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
             rabbitMQ.setupRabbit();
         } catch (SQLException e) {
             System.out.println("mySQL connection failed! Cause: " + e.getMessage() + "\nHas it finished starting?");
@@ -52,6 +52,13 @@ public class receiver {
                 } else {
                     rabbitMQ.send("ConfirmLikeUpdate","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
                 }
+                if(response.get("status") == "503"){
+                    try {
+                        mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
+                    } catch (SQLException throwables) {
+                        System.out.println("SQL connection failed");
+                    }
+                }
             });
             /* Event: RequestLikesForPost Response: ReturnLikesForPost
              *
@@ -73,6 +80,13 @@ public class receiver {
                     rabbitMQ.send("ReturnLikesForPost",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
                     rabbitMQ.send("ReturnLikesForPost","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
+                }
+                if(response.get("status") == "503"){
+                    try {
+                        mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
+                    } catch (SQLException throwables) {
+                        System.out.println("SQL connection failed");
+                    }
                 }
             });
             /* Event: RequestLikeStatus Response: ReturnLikeStatus
@@ -102,6 +116,13 @@ public class receiver {
                     rabbitMQ.send("ReturnLikeStatus",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
                     rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
+                }
+                if(response.get("status") == "503"){
+                    try {
+                        mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
+                    } catch (SQLException throwables) {
+                        System.out.println("SQL connection failed");
+                    }
                 }
             });
             rabbitMQ.setupReceiver("Likes");
