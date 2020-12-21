@@ -118,7 +118,7 @@ public class receiver {
                     rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
                 }
                 if(response.get("status") == "503"){
-                    throw new IOException();
+                    int crash = 503/0;
                     /*try {
 
                         mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
@@ -129,10 +129,11 @@ public class receiver {
             });
             rabbitMQ.setupReceiver("Likes");
             System.out.println("The Likes service is now fully up and running!");
-        } catch (IOException | TimeoutException e) {
-            System.out.println("Failed to add subscription! Cause: \n" + e.getMessage());
+        } catch (TimeoutException | IOException e) {
+            e.printStackTrace();
         }
     }
+
 
     public static void ping(String url){
         try {
