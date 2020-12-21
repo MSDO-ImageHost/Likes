@@ -118,11 +118,13 @@ public class receiver {
                     rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
                 }
                 if(response.get("status") == "503"){
-                    try {
+                    throw new IOException();
+                    /*try {
+
                         mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
                     } catch (SQLException throwables) {
                         System.out.println("SQL connection failed");
-                    }
+                    }*/
                 }
             });
             rabbitMQ.setupReceiver("Likes");
