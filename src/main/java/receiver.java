@@ -16,11 +16,11 @@ public class receiver {
             mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
             rabbitMQ.setupRabbit();
         } catch (SQLException e) {
-            System.out.println("mySQL connection failed! Cause: " + e.getMessage() + "\nHas it finished starting?");
-            e.printStackTrace(System.err);
+            e.printStackTrace();
+            System.exit(-1);
         } catch (TimeoutException | IOException e) {
-            System.out.println("rabbitmq connection failed! Cause: " + e.getMessage() + "\nHas it finished starting?");
-            e.printStackTrace(System.err);
+            e.printStackTrace();
+            System.exit(-1);
         }
 
         JSONParser parser = new JSONParser();
