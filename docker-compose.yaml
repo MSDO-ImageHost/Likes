@@ -1,12 +1,5 @@
 version: '3'
 
-networks:
-  public:
-    driver: bridge
-    name: ImageHost
-  rabbit-network:
-    external:
-      name: webgateway_rabbit-network
 volumes:
   rabbitmq_data:
     driver: local
@@ -17,9 +10,6 @@ services:
   mySQL:
     image: mysql:8
     command: --init-file /data/application/init.sql
-    container_name: likes_db
-    networks:
-      - public
     volumes:
       - db_data:/var/lib/mysql
       - ./init.sql:/data/application/init.sql
@@ -38,17 +28,12 @@ services:
   likes:
     build: .
     container_name: likes
-    networks:
-      - public
-      - rabbit-network
     depends_on:
       - mySQL
-    ports:
-      - 8080:80
-      - 3000:3000
     env_file: .env
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT}
+      - MYSQL_USER=${MYSQL_USER}
       - MYSQL_DB=${MYSQL_DB}
       - MYSQL_PORT=${MYSQL_PORT}
       - MYSQL_HOST=${MYSQL_HOST}

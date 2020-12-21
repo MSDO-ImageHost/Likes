@@ -51,9 +51,12 @@ public class receiver {
                     rabbitMQ.send("ConfirmLikeUpdate",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
                     rabbitMQ.send("ConfirmLikeUpdate","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
-                }
-                if(response.get("Status") == "503"){
-                    System.exit(-1);
+                    System.out.println(response.get("Status"));
+                    System.out.println(response.get("Status") == "503");
+                    System.out.println( ((Integer) response.get("Status")) == 503);
+                    if(((Integer) response.get("Status")) == 503){
+                        System.exit(-1);
+                    }
                 }
             });
             /* Event: RequestLikesForPost Response: ReturnLikesForPost
@@ -76,9 +79,9 @@ public class receiver {
                     rabbitMQ.send("ReturnLikesForPost",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
                     rabbitMQ.send("ReturnLikesForPost","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
-                }
-                if(response.get("Status") == "503"){
-                    System.exit(-1);
+                    if(((Integer) response.get("Status")) == 503){
+                        System.exit(-1);
+                    }
                 }
             });
             /* Event: RequestLikeStatus Response: ReturnLikeStatus
@@ -108,16 +111,12 @@ public class receiver {
                     rabbitMQ.send("ReturnLikeStatus",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
                     rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
-                }
-                System.out.println(response.get("Status"));
-                if(response.get("Status") == "503"){
-                    System.exit(-1);
-                    /*try {
-
-                        mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
-                    } catch (SQLException throwables) {
-                        System.out.println("SQL connection failed");
-                    }*/
+                    System.out.println(response.get("Status"));
+                    System.out.println(response.get("Status") == "503");
+                    System.out.println( ((Integer) response.get("Status")) == 503);
+                    if(((Integer) response.get("Status")) == 503){
+                        System.exit(-1);
+                    }
                 }
             });
             rabbitMQ.setupReceiver("Likes");

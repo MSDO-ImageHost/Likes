@@ -52,6 +52,8 @@ public class Events {
             json.put("Like status", bool);
             return json;
         } catch (SQLException e) {
+            System.out.println(e.getErrorCode());
+            System.out.println(e.getSQLState());
             json.put("Status", 503);
             json.put("Message","Failed to connect to database");
             return json;
