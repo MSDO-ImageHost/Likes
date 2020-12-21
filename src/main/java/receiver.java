@@ -117,8 +117,9 @@ public class receiver {
                 } else {
                     rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
                 }
+                System.out.println(response.get("status"));
                 if(response.get("status") == "503"){
-                    int crash = 503/0;
+                    System.exit(-1);
                     /*try {
 
                         mySQL.start(mySQLURI,System.getenv("MYSQL_USER"),System.getenv("MYSQL_ROOT_PASSWORD"));
@@ -133,7 +134,6 @@ public class receiver {
             e.printStackTrace();
         }
     }
-
 
     public static void ping(String url){
         try {
