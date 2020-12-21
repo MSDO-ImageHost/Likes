@@ -18,7 +18,7 @@ public class rabbitMQ {
     private static Connection connection;
 
     public static void setupRabbit() throws IOException, TimeoutException {
-        String uri = System.getenv("RABBITMQ_USER") + ":"  + System.getenv("RABBITMQ_PASS") + "@" + System.getenv("RABBITMQ_HOST");
+        String uri =  "amqp://"+System.getenv("RABBITMQ_USER") + ":"  + System.getenv("RABBITMQ_PASS") + "@" + System.getenv("RABBITMQ_HOST");
         ConnectionFactory factory = new ConnectionFactory();
         try {
             factory.setUri(uri);

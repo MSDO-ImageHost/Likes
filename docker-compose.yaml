@@ -4,7 +4,9 @@ networks:
   public:
     driver: bridge
     name: ImageHost
-
+  rabbit-network:
+    external:
+      name: webgateway_rabbit-network
 volumes:
   rabbitmq_data:
     driver: local
@@ -12,20 +14,6 @@ volumes:
     driver: local
 
 services:
-  rabbitMQ:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    volumes:
-      - rabbitmq_data:/bitnami
-    ports:
-      - 15672:15672 # maybe this can be deleted
-      - 5672:5672
-    environment:
-      - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
-    restart: unless-stopped
-    networks:
-      - public
   mySQL:
     image: mysql:8
     command: --init-file /data/application/init.sql
@@ -38,7 +26,12 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_DB=${MYSQL_DB}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
     ports:
       - 3306:3306
 
@@ -47,6 +40,7 @@ services:
     container_name: likes
     networks:
       - public
+      - rabbit-network
     depends_on:
       - mySQL
     ports:
@@ -54,7 +48,11 @@ services:
       - 3000:3000
     env_file: .env
     environment:
-      - AMQP_URI=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:5672
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT}
-      - MYSQL_URI=jdbc:mysql://likes_db:3306/${MYSQL_DATABASE}
+      - MYSQL_DB=${MYSQL_DB}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
     restart: unless-stopped

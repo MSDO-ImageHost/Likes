@@ -40,7 +40,7 @@ public class Events {
             return json;
         }
     }
-    public static JSONObject RequestLikeStatus(String User_ID, Object Post_ID, String consumerTag, String correlationID) {
+    public static JSONObject RequestLikeStatus(String User_ID, Object Post_ID) {
         JSONObject json = new JSONObject();
         if(User_ID == null || Post_ID == null) {
             json.put("Status", 400);

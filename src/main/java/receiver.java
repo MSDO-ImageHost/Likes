@@ -10,6 +10,7 @@ import java.util.concurrent.TimeoutException;
 
 public class receiver {
     public static void main(String[] args) {
+        ping("rabbitmq:5672");
         String mySQLURI = "jdbc:mysql://" + System.getenv("MYSQL_HOST") + ":" + System.getenv("MYSQL_PORT") + "/" + System.getenv("MYSQL_DB");
         try {
             mySQL.start(mySQLURI,"root",System.getenv("MYSQL_ROOT_PASSWORD"));
@@ -66,12 +67,6 @@ public class receiver {
                     rabbitMQ.send("ReturnLikesForPost","",rabbitMQ.setupProperties(correlationID,contentType,400,"Malformed request syntax"));
                     return;
                 }
-                String token = String.valueOf(delivery.getProperties().getHeaders().get("jwt"));
-                DecodedJWT jwt = Security.decodeJWT(token);
-                if(jwt == null){
-                    rabbitMQ.send("ReturnLikesForPost","",rabbitMQ.setupProperties(correlationID,contentType,403,"Invalid Authentication token"));
-                    return;
-                }
                 JSONObject response = Events.RequestLikesForPost(json.get("post_id"));
                 Object Like_amount = response.get("Like amount");
                 if(Like_amount != null) {
@@ -101,7 +96,7 @@ public class receiver {
                     rabbitMQ.send("ReturnLikeStatus","",rabbitMQ.setupProperties(correlationID,contentType,403,"Invalid Authentication token"));
                     return;
                 }
-                JSONObject response = Events.RequestLikeStatus(jwt.getSubject(),json.get("post_id"), consumerTag, delivery.getProperties().getCorrelationId());
+                JSONObject response = Events.RequestLikeStatus(jwt.getSubject(),json.get("post_id"));
                 Object Like_status = response.get("Like status");
                 if(Like_status != null) {
                     rabbitMQ.send("ReturnLikeStatus",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
