@@ -33,7 +33,7 @@ public class mySQL {
         } else {
             System.out.println("Setting like status to true");
             sql = String.format("INSERT INTO Likes (postID, userID) VALUES ('%s','%s');",PostID,UserID);
-            affected = stmt;
+            affected = stmt.executeUpdate(sql);
             if(affected == 1)
                 return true;
         }
