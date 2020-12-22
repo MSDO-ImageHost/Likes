@@ -46,14 +46,11 @@ public class receiver {
                     return;
                 }
                 JSONObject response = Events.UpdateLike(jwt.getSubject(), json.get("post_id"));
-                Object like_status = response.get("Like status");
+                Object like_status = response.get("like_status");
                 if(like_status != null) {
                     rabbitMQ.send("ConfirmLikeUpdate",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
                     rabbitMQ.send("ConfirmLikeUpdate","",rabbitMQ.setupProperties(correlationID,contentType,(Integer) response.get("Status"),(String) response.get("Message")));
-                    System.out.println(response.get("Status"));
-                    System.out.println(response.get("Status") == "503");
-                    System.out.println( ((Integer) response.get("Status")) == 503);
                     if(((Integer) response.get("Status")) == 503){
                         System.exit(-1);
                     }
@@ -74,7 +71,7 @@ public class receiver {
                     return;
                 }
                 JSONObject response = Events.RequestLikesForPost(json.get("post_id"));
-                Object Like_amount = response.get("Like amount");
+                Object Like_amount = response.get("like_amount");
                 if(Like_amount != null) {
                     rabbitMQ.send("ReturnLikesForPost",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
@@ -106,7 +103,7 @@ public class receiver {
                     return;
                 }
                 JSONObject response = Events.RequestLikeStatus(jwt.getSubject(),json.get("post_id"));
-                Object Like_status = response.get("Like status");
+                Object Like_status = response.get("like_status");
                 if(Like_status != null) {
                     rabbitMQ.send("ReturnLikeStatus",response.toJSONString(),rabbitMQ.setupProperties(correlationID,contentType,200,""));
                 } else {
